@@ -20,11 +20,11 @@ It is written
 
 1. Segment Tree
 
-    - [zkw segment tree](./segment_tree/zkw_segment_tree.cxx)
+    - [ZKW Segment Tree](./segment_tree/zkw_segment_tree.cxx)
 
 2. Tree Like Array
 
-    - [binary indexed tree](./tree_array/tree_array.cxx)
+    - [Tree Like Array](./tree_array/tree_array.cxx)
 
 3. Graph-Related
 
