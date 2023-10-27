@@ -29,5 +29,16 @@ It is written
 3. Graph-Related
 
     - [Critical Path](./graph/critical_path.cxx)
-    - [Dijkstra](./graph/dijkstra.cxx)
-    - [Bellman-Ford](./graph/bellman_ford.cxx)
+    - Shortest path
+
+        - [Dijkstra](./graph/shortest_path/dijkstra.cxx)
+        - [Bellman-Ford](./graph/shortest_path/bellman_ford.cxx)
+        - [Floyd](./graph/shortest_path/floyd.cxx)
+    - Minimal Spanning Tree
+
+        - [Prim](./graph/minimal_spanning_tree/prim.cxx)
+        - [Kruskal](./graph/minimal_spanning_tree/kruskal.cxx)
+
+4. Bisect
+
+    - [Bisect](./bisect/bisect.cxx)

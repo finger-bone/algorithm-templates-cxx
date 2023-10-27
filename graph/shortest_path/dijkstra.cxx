@@ -3,10 +3,11 @@
 
 using namespace std;
 
+// Node is just type with data and weight, doesn't indicate it's an edge nor a node in graph
 struct Node {
-    int to;
+    int n;
     int weight;
-    Node(int to, int weight) : to(to), weight(weight) {}
+    Node(int n, int weight) : n(n), weight(weight) {}
     bool operator<(const Node& other) const {
         return weight > other.weight;
     }
@@ -27,7 +28,7 @@ vector<int> dijkstra(vector<vector<Node>> g, int source) {
     while(!pq.empty()) {
         Node node = pq.top();
         pq.pop();
-        int u = node.to;
+        int u = node.n;
 
         // this also filters out previously added element
         // since the distance to the last node is certainly smaller than that of the previous ones
@@ -37,7 +38,7 @@ vector<int> dijkstra(vector<vector<Node>> g, int source) {
 
         // update the distance to the last node
         for(Node& next : g[u]) {
-            int v = next.to;
+            int v = next.n;
             int w = next.weight;
             // relax
             if(dist[v] > dist[u] + w) {

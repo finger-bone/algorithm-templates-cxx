@@ -15,11 +15,11 @@ The latest time of a node is the min of the latest time of the next node and the
 The critical path is the path with the earliest time equal to the latest time.
 */
 
-// Node is an edge, to is the destination, weight is the weight of the edge
+// Node is just type with data and weight, doesn't indicate it's an edge nor a node in graph
 struct Node {
-    int to;
+    int n;
     int weight;
-    Node(int to, int weight) : to(to), weight(weight) {}
+    Node(int n, int weight) : n(n), weight(weight) {}
     Node() {}
 };
 
@@ -36,8 +36,8 @@ vector<int> critical_path(int n, vector<vector<Node>> g, int source, int destina
         int t = s.top();
         s.pop();
         for(auto n: g[t]) {
-            earliest[n.to] = max(earliest[n.to], earliest[t] + n.weight);
-            s.push(n.to);
+            earliest[n.n] = max(earliest[n.n], earliest[t] + n.weight);
+            s.push(n.n);
         }
     }
 
@@ -46,7 +46,7 @@ vector<int> critical_path(int n, vector<vector<Node>> g, int source, int destina
     vector<vector<Node>> reversed(n, vector<Node>());
     for(int i = 0; i < n; ++i) {
         for(auto n: g[i]) {
-            reversed[n.to].push_back(Node(i, n.weight));
+            reversed[n.n].push_back(Node(i, n.weight));
         }
     }
     constexpr int INF = 0x3f3f3f3f;
@@ -57,8 +57,8 @@ vector<int> critical_path(int n, vector<vector<Node>> g, int source, int destina
         int t = s.top();
         s.pop();
         for(auto n: reversed[t]) {
-            latest[n.to] = min(latest[n.to], latest[t] - n.weight);
-            s.push(n.to);
+            latest[n.n] = min(latest[n.n], latest[t] - n.weight);
+            s.push(n.n);
         }
     }
 
@@ -68,9 +68,9 @@ vector<int> critical_path(int n, vector<vector<Node>> g, int source, int destina
     path.push_back(t);
     while(t != destination) {
         for(auto n: g[t]) {
-            if(earliest[n.to] == latest[n.to]) {
-                path.push_back(n.to);
-                t = n.to;
+            if(earliest[n.n] == latest[n.n]) {
+                path.push_back(n.n);
+                t = n.n;
                 break;
             }
         }

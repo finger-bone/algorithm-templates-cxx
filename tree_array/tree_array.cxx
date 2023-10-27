@@ -4,7 +4,6 @@
 
 using namespace std;
 
-#ifdef CLEAR_VERSION
 struct TreeArray {
     vector<int> val;
     int n;
@@ -52,11 +51,9 @@ struct TreeArray {
         return ret;
     }
 
-    // update the value of raw[i] to v
+    // update the value of raw[i]
     void update(int i, int diff)
     {
-
-        // update the value of raw[i] to v
         while (i <= n)
         {
             val[i] += diff;
@@ -64,61 +61,6 @@ struct TreeArray {
         }
     }
 };
-#endif
-
-#ifdef QUICK_VERSION
-// uses memcpy, lazy caching to speed up
-
-#include <cstdlib>
-
-struct TreeArray {
-    vector<int> val;
-    int n;
-    bool modified;
-    vector<int> lazy;
-    TreeArray(const vector<int>& raw) {
-        n = raw.size();
-        val = vector<int>(n + 1);
-        memcpy(&val[1], &raw[0], n * sizeof(int));
-        for (int i = 1; i <= n; ++i)
-        {
-            int j = i + LB(i);
-            if (j <= n)
-            {
-                val[j] += val[i];
-            }
-        }
-        lazy = vector<int>(n + 1);
-        memcpy(&lazy[0], &val[0], (n + 1) * sizeof(int));
-        modified = false;
-    }
-
-    int query(int i)
-    {
-        if(modified) {
-            memcpy(&val[0], &lazy[0], (n + 1) * sizeof(int));
-            modified = false;
-        }
-        int ret = 0;
-        while (i > 0)
-        {
-            ret += lazy[i];
-            i -= LB(i);
-        }
-        return ret;
-    }
-
-    void update(int i, int diff)
-    {
-        modified = true;
-        while (i <= n)
-        {
-            lazy[i] += diff;
-            i += LB(i);
-        }
-    }
-};
-#endif
 
 #ifdef DEBUG
 
