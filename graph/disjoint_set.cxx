@@ -37,6 +37,7 @@ struct DS {
             swap(x, y);
         }
         fa[find(x)] = find(y);
+        rank[y] += rank[x];
     }
 };
 

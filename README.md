@@ -29,6 +29,7 @@ It is written
 3. Graph-Related
 
     - [Critical Path](./graph/critical_path.cxx)
+    - [Disjoint Set](./graph/disjoint_set.cxx)
     - Shortest path
 
         - [Dijkstra](./graph/shortest_path/dijkstra.cxx)
