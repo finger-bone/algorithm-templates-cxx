@@ -5,8 +5,6 @@ using namespace std;
 struct SegmentTree
 {
     vector<int> val;
-    vector<int> lazy;
-    bool modified;
     int n;
 
     SegmentTree(const vector<int> &raw)
@@ -20,39 +18,16 @@ struct SegmentTree
         val = vector<int>(4 * n, 0);
 
         // init the leaf nodes
-        for (int i = 0; i < n; ++i)
-        {
-            val[i + n] = raw[i];
-        }
+        for (int i = 0; i < n; ++i) val[i + n] = raw[i];
 
         // calculate the internal nodes
         // because the upper nodes has lower index, we calculate from the bottom to the top
-        for (int i = n - 1; i > 0; --i)
-        {
-            val[i] = val[2 * i] + val[2 * i + 1];
-        }
-
-        // lazy is used for lazy propagation, copy the val array
-        lazy = val;
-
-        // modified is used to indicate whether the lazy array is modified
-        modified = false;
+        for (int i = n - 1; i > 0; --i) val[i] = val[2 * i] + val[2 * i + 1];
     }
 
     // query the sum of l..=r, l r all starts from 0
     int query(int l, int r)
     {
-        // if modified, we need to update the arrays
-        if(modified) {
-            modified = false;
-            val = lazy;
-            
-            // update the internal nodes
-            for(int i = n; i > 0; --i) {
-                val[i] = val[2 * i] + val[2 * i + 1];
-            }
-        }
-
         int ret = 0;
 
         // l += n so that it is located to the leaf node, same for r
@@ -101,10 +76,12 @@ struct SegmentTree
     // update the value of the i-th element to v, i starts from 0
     void update(int i, int v)
     {
-        // now only modify the lazy array, and set modified to true
-        // the evaluation happens only when query is called
-        i += n;
-        lazy[i] = v;
+        val[i + n] = v;
+        // the affected nodes are the nodes on the path from the leaf to the root
+        // that is, all nodes whose index is i or i's ancestor
+        // the first should be i + n, but it's modified to v
+        // so we start from (i + n) / 2
+        for (i = (i + n) / 2; i > 0; i /= 2) val[i] = val[2 * i] + val[2 * i + 1];
     }
 };
 
