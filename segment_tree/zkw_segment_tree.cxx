@@ -2,10 +2,11 @@
 
 using namespace std;
 
-#ifdef CLEAR_VERSION
 struct SegmentTree
 {
     vector<int> val;
+    vector<int> lazy;
+    bool modified;
     int n;
 
     SegmentTree(const vector<int> &raw)
@@ -30,11 +31,28 @@ struct SegmentTree
         {
             val[i] = val[2 * i] + val[2 * i + 1];
         }
+
+        // lazy is used for lazy propagation, copy the val array
+        lazy = val;
+
+        // modified is used to indicate whether the lazy array is modified
+        modified = false;
     }
 
     // query the sum of l..=r, l r all starts from 0
     int query(int l, int r)
     {
+        // if modified, we need to update the arrays
+        if(modified) {
+            modified = false;
+            val = lazy;
+            
+            // update the internal nodes
+            for(int i = n; i > 0; --i) {
+                val[i] = val[2 * i] + val[2 * i + 1];
+            }
+        }
+
         int ret = 0;
 
         // l += n so that it is located to the leaf node, same for r
@@ -83,87 +101,12 @@ struct SegmentTree
     // update the value of the i-th element to v, i starts from 0
     void update(int i, int v)
     {
-        // i += n + 1 so that it is located to the leaf node
-        i += n + 1;
-
-        // update the value of the leaf node
-        val[i] = v;
-
-        // update the value of the internal nodes
-        // because the upper nodes has lower index, we calculate from the bottom to the top
-        // the same as the init function
-        for (i /= 2; i > 0; i /= 2)
-        {
-            val[i] = val[2 * i] + val[2 * i + 1];
-        }
-    }
-};
-#endif
-
-#ifdef QUICK_VERSION
-// the updates are cached into the lazy array
-// when calling query, the cached updates are applied to the val array
-// also uses bits operations and memcpy to speed up
-
-#include <cstdlib>
-
-struct SegmentTree
-{
-    vector<int> val;
-    vector<int> lazy;
-    bool modified;
-    int n;
-
-    SegmentTree(const vector<int> &raw)
-    {
-        n = raw.size();
-        val = vector<int>(n << 2);
-        memcpy(&val[n], &raw[0], n * sizeof(int));
-        for (int i = n - 1; i > 0; --i)
-        {
-            val[i] = val[i << 1] + val[i << 1 | 1];
-        }
-        lazy = vector<int>(n << 2);
-        memcpy(&lazy[0], &val[0], lazy.size() * sizeof(int));
-        modified = false;
-    }
-
-    int query(int l, int r)
-    {
-        if (modified)
-        {
-            memcpy(&val[0], &lazy[0], lazy.size() * sizeof(int));
-            modified = false;
-        }
-        int ret = 0;
-        for (l += n, r += n; l <= r; l >>= 1, r >>= 1)
-        {
-            if (l & 1)
-            {
-                ret += val[l];
-                ++l;
-            }
-            if (!(r & 1))
-            {
-                ret += val[r];
-                --r;
-            }
-        }
-        return ret;
-    }
-
-    void update(int i, int v)
-    {
+        // now only modify the lazy array, and set modified to true
+        // the evaluation happens only when query is called
         i += n;
         lazy[i] = v;
-        for (i >>= 1; i > 0; i >>= 1)
-        {
-            lazy[i] = lazy[i << 1] + lazy[i << 1 | 1];
-        }
-        modified = true;
     }
 };
-#endif
 
 #ifdef DEBUG
 int main()

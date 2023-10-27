@@ -66,9 +66,6 @@ struct TreeArray {
 };
 #endif
 
-#define QUICK_VERSION
-#define DEBUG
-
 #ifdef QUICK_VERSION
 // uses memcpy, lazy caching to speed up
 
