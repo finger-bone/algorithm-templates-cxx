@@ -12,10 +12,7 @@ struct TreeArray {
         val = vector<int>(n + 1);
 
         // first, copy the raw array to the val array
-        for (int i = 0; i < n; ++i)
-        {
-            val[i + 1] = raw[i];
-        }
+        for (int i = 0; i < n; ++i) val[i + 1] = raw[i];
 
         // then, update the val array
         for (int i = 1; i <= n; ++i)
@@ -28,10 +25,7 @@ struct TreeArray {
             // since the parent of i should adds val[i] only once,
             // so the grand parent of i adds val[i] only once, and so on
             int j = i + LB(i);
-            if (j <= n)
-            {
-                val[j] += val[i];
-            }
+            if (j <= n) val[j] += val[i];
         }
     }
 

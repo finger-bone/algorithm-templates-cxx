@@ -13,9 +13,7 @@ struct DS {
     DS(int n) {
         fa.resize(n);
         rank.resize(n);
-        for(int i = 0; i < n; i++) {
-            fa[i] = i;
-        }
+        for(int i = 0; i < n; i++) fa[i] = i;
         fill(rank.begin(), rank.end(), 1);
     }
 
@@ -33,9 +31,7 @@ struct DS {
     void unify(int x, int y) {
         // we would like to make the tree more balanced
         // that is, we want fewer nodes at the deeper level
-        if(rank[x] >= rank[y]) {
-            swap(x, y);
-        }
+        if(rank[x] >= rank[y]) swap(x, y);
         fa[find(x)] = find(y);
         rank[y] += rank[x];
     }

@@ -45,9 +45,7 @@ vector<int> critical_path(int n, vector<vector<Node>> g, int source, int destina
     // to do so, we must traverse the graph in reverse order
     vector<vector<Node>> reversed(n, vector<Node>());
     for(int i = 0; i < n; ++i) {
-        for(auto n: g[i]) {
-            reversed[n.n].push_back(Node(i, n.weight));
-        }
+        for(auto n: g[i]) reversed[n.n].push_back(Node(i, n.weight));
     }
     constexpr int INF = 0x3f3f3f3f;
     vector<int> latest(n, INF);

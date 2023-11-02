@@ -13,7 +13,7 @@ It is written
     - `using namespace std;` is used in the global scope
     - maximize the usage of standard library
     - minimize the usage of pointer
-    - only in linked list, tree and other data structures, in which, there has to be indefinite number of nodes, pointer is used so that struct can be validly defined.
+    - only in linked list, tree and other data structures, in which, there has to be indefinite number of nodes, pointer is used so that struct can be validly defined. However, only use raw pointers instead of smart pointers.
     - minimize the usage of bitwise operators, unless it is necessary. We believe that compilers are smart enough to optimize the code.
 
 ## Contents
@@ -26,7 +26,7 @@ It is written
 
     - [Tree Like Array](./tree_array/tree_array.cxx)
 
-3. Graph-Related
+3. Other Graph-Related
 
     - [Critical Path](./graph/critical_path.cxx)
     - [Disjoint Set](./graph/disjoint_set.cxx)
@@ -40,6 +40,15 @@ It is written
         - [Prim](./graph/minimal_spanning_tree/prim.cxx)
         - [Kruskal](./graph/minimal_spanning_tree/kruskal.cxx)
 
-4. Bisect
+4. Other Tree-Related
 
+5. Bisect
+
+    - [Binary Search Tree](./bisect/binary_search_tree.cxx)
+    - [Red-Black Tree](./tree/rb_tree.cxx)
     - [Bisect](./bisect/bisect.cxx)
+
+6. Sort
+
+    - [Quick Sort](./sort/quick_sort.cxx)
+    - [Merge Sort](./sort/merge_sort.cxx)

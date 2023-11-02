@@ -5,21 +5,19 @@ using namespace std;
 struct DS {
     vector<int> fa, rank;
     DS(int n) {
-        fa.assign(n, 0);
-        rank.assign(n, 1);
+        fa.assign(n, 0); rank.assign(n, 1);
         for(int i = 0; i < n; ++i) fa[i] = i;
     }
     int find(int x) {
         int cur = x, next = fa[cur];
         while(cur != next) {
-            cur = next;
-            next = fa[cur];
+            cur = next; next = fa[cur];
         }
         return cur;
     }
     void unify(int x, int y) {
         if(rank[x] >= rank[y]) swap(x, y);
-        fa[find(x)] = find(y);
+        rank[y] += rank[x]; fa[find(x)] = find(y);
     }
 };
 

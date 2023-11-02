@@ -77,6 +77,17 @@ int bisect_min_f(const vector<int>& vec, validate f) {
     return f(l) ? l : -1;
 }
 
+// however, please take note that we should use open interval as much as possible
+// because open interval prevents us from infinite loop
+// for example, in the bisect_max_f, if we use [l, r]
+// when there are only two elements left, l = r - 1
+// then mid = (l + r) >> 1 = l
+// then we check f(mid), which is f(l)
+// if f(l) is true, then we set l = mid, which is l = l
+// then there is no change, and the loop will never break
+// so, in conclusion, we should use open interval as much as possible
+// despite examples above uses closed interval
+
 #ifdef DEBUG
 
 #include <iostream>

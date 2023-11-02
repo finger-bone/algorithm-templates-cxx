@@ -62,14 +62,4 @@ public:
 
         node->val = val;
     }
-
-    // query the sum of [l, r]
-    int query(int l, int r) {
-        int ret = 0;
-        int ll = 0;
-        int rr = n - 1;
-        Node* node = root;
-
-        
-    }
 };
