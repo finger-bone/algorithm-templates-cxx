@@ -57,17 +57,26 @@ struct Node {
     Node(int val, bool black = false, Node *left = nullptr, Node *right = nullptr, Node *parent = nullptr) : val(val), black(black), left(left), right(right), parent(parent) {}
 };
 
-// to avoid saying if(n != nullptr) every time
-// we define a macro
-#define NN(n) if((n) != (nullptr))
+// we define some macros to simplify repeating codes
+// null
+#define N(n) ((n) == (nullptr))
+// if null
+#define IN(n) if((n) == (nullptr))
+// not null
+#define NN(n) ((n) != (nullptr))
+// if not null
+#define INN(n) if((n) != (nullptr))
+// set null
+#define SN(n) ((n) = (nullptr))
 // we also don't want to handle color of nullptr every time
-#define C(n) (((n) == nullptr) ? true : ((n)->black))
+// is_black
+#define B(n) (((n) == nullptr) ? true : ((n)->black))
 struct RBTree {
     Node* root;
     size_t size;
     RBTree() : root(nullptr), size(0) {}
-    void rotate_left(Node *n) {
-        if(n == nullptr) return;
+    void left_rotate(Node *n) {
+        IN(n) return;
         // consider the following tree
         //              p
         //             / \
@@ -97,13 +106,13 @@ struct RBTree {
         // we are only sure that n is not nullptr
         n->right = e;
         n->parent = b;
-        NN(b) b->right = f;
-        NN(b) b->left = n;
-        NN(b) b->parent = p;
-        NN(e) e->parent = n;
-        NN(f) f->parent = b;
+        INN(b) b->right = f;
+        INN(b) b->left = n;
+        INN(b) b->parent = p;
+        INN(e) e->parent = n;
+        INN(f) f->parent = b;
         // there maybe cases that such rotation changes the root
-        if(p == nullptr) {
+        IN(p) {
             root = b;
         }
         else {
@@ -115,8 +124,8 @@ struct RBTree {
             }
         }
     }
-    void rotate_right(Node *n) {
-        if(n == nullptr) return;
+    void right_rotate(Node *n) {
+        IN(n) return;
         // consider the following tree
         //              p
         //             / \
@@ -137,18 +146,18 @@ struct RBTree {
         //                  e   f
         Node *p = n->parent;
         Node *b = n->left;
-        Node *c = b != nullptr ? b->left : nullptr;
-        Node *d = b != nullptr ? b->right : nullptr;
+        Node *c = NN(b) ? b->left : nullptr;
+        Node *d = NN(b) ? b->right : nullptr;
         // we are only sure that n is not nullptr
         n->parent = b;
         n->left = d;
-        NN(b) b->parent = p;
-        NN(b) b->right = n;
-        NN(b) b->left = c;
-        NN(d) d->parent = n;
-        NN(c) c->parent = b;
+        INN(b) b->parent = p;
+        INN(b) b->right = n;
+        INN(b) b->left = c;
+        INN(d) d->parent = n;
+        INN(c) c->parent = b;
         // there maybe cases that such rotation changes the root
-        if(p == nullptr) {
+        IN(p) {
             root = b;
         }
         else {
@@ -164,13 +173,13 @@ struct RBTree {
     void insert(int val) {
         ++size;
         // first, insert the node the same way as binary search tree
-        if(root == nullptr) {
+        IN(root) {
             root = new Node(val, true);
             return;
         }
         Node *prev = nullptr;
         Node *cur = root;
-        while(cur != nullptr) {
+        while(NN(cur)) {
             prev = cur;
             if(val < cur->val) cur = cur->left;
             else cur = cur->right;
@@ -191,12 +200,19 @@ struct RBTree {
         // there are following cases that we need to fix
         // we move the fixing process to a function for convenience
         // because we'll need recursive calls
+        // fix function fixes the tree of following shape
+        //          g
+        //         / \
+        //        p   u
+        //      / \
+        //     n   *
+        // in which, p and n may both be red
         function<void(Node*)> fix = [&](Node* n) {
             // n may be nullptr
-            if(n == nullptr) return;
+            IN(n) return;
             // if the node is root
             // we just need to color it black, it's done
-            if(n->parent == nullptr) {
+            IN(n->parent) {
                 n->black = true;
                 return;
             }
@@ -205,7 +221,7 @@ struct RBTree {
             // but since the root is black
             // we can assert that the new node must be red, which is out default setting
             // so no need to handle this case
-            if(n->parent->parent == nullptr) return;
+            IN(n->parent->parent) return;
 
             // below
             // g stands for grandparent
@@ -254,10 +270,10 @@ struct RBTree {
             // notice that if n is red, then this sub-tree is balanced
             // wether n is the left child or the right child of p doesn't matter
             // thus
-            if(!C(p) && !C(u)) {
-                NN(p) p->black = true;
-                NN(u) u->black = true;
-                NN(g) g->black = false;
+            if(!B(p) && !B(u)) {
+                INN(p) p->black = true;
+                INN(u) u->black = true;
+                INN(g) g->black = false;
                 // now, we need to fix the tree
                 // because g is red, and p is black
                 // so we need to fix the tree as if p is the new node
@@ -290,10 +306,10 @@ struct RBTree {
             //           / \
             //          *   u
             // count doesn't change and the root is black, done!
-            if(!C(p) && C(u) && p->left == n) {
-                rotate_right(g);
-                NN(p) p->black = true;
-                NN(g) g->black = false;
+            if(!B(p) && B(u) && p->left == n) {
+                right_rotate(g);
+                INN(p) p->black = true;
+                INN(g) g->black = false;
                 return;
             }
             // 3. p is red, u is black, n is right child
@@ -320,10 +336,10 @@ struct RBTree {
             //   *   n
             // the additional two stars are the original u's children
             // now, this is a balanced tree, because the count doesn't change, and the root is black
-            if(!C(p) && C(u) && p->right == n) {
-                rotate_left(g);
-                NN(g) g->black = false;
-                NN(u) u->black = true;
+            if(!B(p) && B(u) && p->right == n) {
+                left_rotate(g);
+                INN(g) g->black = false;
+                INN(u) u->black = true;
                 return;
             }
         };
@@ -333,7 +349,7 @@ struct RBTree {
     Node *get(int val) {
         // the same as binary search tree
         Node *cur = root;
-        while(cur != nullptr) {
+        while(NN(cur)) {
             if(cur->val == val) return cur;
             if(val < cur->val) cur = cur->left;
             else cur = cur->right;
@@ -342,59 +358,206 @@ struct RBTree {
     }
 
     void remove(Node* n) {
-        // first consider deleting the root
-        if(n == root) {
-            root = nullptr;
+        // n maybe null
+        IN(n) return;
+        // first, reduce the size
+        --size;
+        // now, here we start the real deletion
+        // we classify the cases by the number of children, and the color
+        int num_children = NN(n->left) + NN(n->right);
+        bool is_n_black = n->black;
+        bool has_left = NN(n->left);
+        // we take the following view at this problem
+        // we always remove a leaf node
+        // when we aren't removing a leaf node
+        // we can convert it
+        // just like how we did in bst
+        // when n has children
+        // we replace n with the left-sub-tree rightest or right-sub-tree leftest node, called sub
+        // then we remove the sub
+        // this will always end up with a leaf node
+        // so first, we consider cases in which n has children
+        if(num_children != 0) {
+            if(has_left) {
+                Node *sub = n->left;
+                while(NN(sub->right)) sub = sub->right;
+                n->val = sub->val;
+                remove(sub);
+            }
+            else {
+                Node *sub = n->right;
+                while(NN(sub->left)) sub = sub->left;
+                n->val = sub->val;
+                remove(sub);
+            }
+            return;
+        }
+        // now, we deal with leaf node, num_children == 0
+        // there are only two cases, from the surface
+        // now, if n is red
+        // this is simple, obviously, we can just delete it
+        if(!is_n_black) {
+            // we need to handle the case where n is root
+            INN(n->parent) {
+                if(n->parent->left == n) {
+                    SN(n->parent->left);
+                }
+                else {
+                    SN(n->parent->right);
+                }
+            }
+            else {
+                SN(root);
+            }
+            // delete n
             delete n;
             return;
         }
-        // now we divide the removing operation into to parts
-        // first, find a node to replace n
-        // then, remove the node
-        // after doing so, maintain the red-black tree property
-        // first, find the substituion: use sub as the substituion
-        Node *sub = nullptr;
-        // same as binary search tree
-        if(n->left != nullptr ^ n->right != nullptr) sub = n->left == nullptr ? n->left : n->right;
-        if(n->left != nullptr && n->right != nullptr) {
-            // find the rightest node of the left tree of n
-            sub = n->left;
-            while(sub->right != nullptr) sub = sub->right;
-        }
-        // now, we have to consider the color of the sub and the n
-        // 1. if sub is nullptr, n is red, just delete n, because n is a leaf
-        if(sub == nullptr && !C(n)) {
-            if(n->parent->left == n) n->parent->left = nullptr;
-            else n->parent->right = nullptr;
+
+
+
+        // now, n is black and has no children
+        // this is hard
+        // following good coding styles
+        // we should have another if here
+        // but I don't want an extra indent and braces and everything
+        // so, if(num_children == 0 && is_n_black) is omitted
+        // first, deal with the case where n is root
+        if(root == n) {
+            SN(root);
             delete n;
             return;
         }
-        // 2. if sub is red, n is whatever
-        // just replace the value, then delete sub
-        if(!C(sub)) {
-            n->val = sub->val;
-            if(sub->parent->left == sub) sub->parent->left = nullptr;
-            else sub->parent->right = nullptr;
-            delete sub;
-            return;
+        // now, n is black and has no children, and it is not a root
+        // we first apply the deletion
+        // we will need following vars for later
+        bool is_n_left = n->parent->left == n;
+        Node *p = n->parent;
+        Node *s = is_n_left ? p->right : p->left;
+        if(is_n_left) {
+            SN(n->parent->left);
         }
-        // the cases below require extra balancing
-        // still keep in mind that
-        // root is black
-        // if we can't balance, color the root red, the balance upwards
-        // 3. if sub is black(maybe nullptr), n is red
-        // for example, s for sub
-        //          *
+        else {
+            SN(n->parent->right);
+        }
+        delete n;
+        // now, we need to separate the cases by the color of n's sibling
+        // to better illustrate the reason
+        // we draw a tree
+        //          p
         //         / \
-        //        n   * 
-        //       / \
-        //      *   *
-        //     / \
-        //    a   s
+        //        n   s
+        // p for parent, s for sibling
+        // after we delete n
+        // the tree is imbalanced
+        // to balance it, we must add an extra black node to p-n path
+        // the source of this extra black node could be
+        // sibling's left child, sibling's right child, or sibling itself
+        // or the parent
+        // if there can't borrow an extra black node from this sub-tree
+        // we move up to look for it
+        // if we can't find it, we add an extra black node to the whole tree
+        // and this node becomes the new root
+        // now, we separate the cases by the color of sibling
+        // since we may need to move up, and we don't want to repeat the code
+        // we define a function
+        // the names are fully spelt to avoid variable name conflicts and provides better clarity
+        // when calling fix(p, n)
+        // it fixes the sub-tree whose root is p
+        // that is,
+        //          p
+        //         / \
+        //        *   s
+        //  in which, compared with the paths from p to s, paths from p to * lacks a black node
+        function<void(Node*, Node*, bool)> fix = [&](Node *parent, Node* sibling, bool lack_in_left) {
+            // 1. sibling is black
+            // this then specifies into following ones
+            // 1.1. sibling is black and has a red child that is of the same direction as n
+            // for example
+            //          p
+            //         / \
+            //        n   s
+            //           / \
+            //          * [R]
+            //      x-1 x  x
+            // we want an extra black node into p-n, so s would be it
+            // so rotate left p
+            //          s
+            //         / \
+            //        p   [R]
+            //      / \
+            //     n   *
+            //     x   x   ?
+            // because we hadn't consider the color of p, [R] is a ?
+            // if p is black, ? is x, we are done.
+            // tragically, if p is red, ? is x-1
+            // however, if we color s the original p's color
+            // and color p black
+            // this would solve both cases
+            // if s was the left child of p, we rotate right p
+            // so we define some functions to simplify the code
+            function<Node*(Node*,bool)> get_child = [&](Node *n, bool left) {
+                if(left) return n->left;
+                else return n->right;
+            };
+            function<void(Node*,bool)> rotate = [&](Node* n, bool left) {
+                if(left) left_rotate(n);
+                else right_rotate(n);
+            };
+            if(B(sibling) && !B(get_child(sibling, !lack_in_left))) {
+                // first color, then rotate
+                sibling->black = parent->black;
+                parent->black = true;
+                rotate(parent, lack_in_left);
+                return;
+            }
+            // 1.2. sibling is black and has a red child that is of the opposite direction as n
+            // for example
+            //          p
+            //         / \
+            //        n   s
+            //           / \
+            //         [R]  *
+            // now if we rotate right s
+            //          p
+            //         / \
+            //        n   [R]
+            //           / \
+            //          *   s
+            //      x-1 ?   x
+            // now, we color [R] as the original color of s, and color s red
+            // this becomes case 1.1
+            if(B(sibling) && !B(get_child(sibling, lack_in_left))) {
+                sibling->black = false;
+                get_child(sibling, lack_in_left)->black = true;
+                rotate(sibling, !lack_in_left);
+                fix(p, get_child(p, lack_in_left), lack_in_left);
+                return;
+            }
+            // 1.3. sibling is black and has no red child
+            // this depends on the color of parent, if parent is red, we can borrow the black from parent
+            // however, if it is not, we need extra operations
+            // 1.3.1. sibling is black and has no red child, parent is red
+            if(B(sibling) && !B(parent)) {
+                sibling->black = false;
+                parent->black = true;
+                return;
+            }
+            // 1.3.2 sibling is black and has no red child, parent is black
+            // this is bad, but also, surprisingly, simple
+            // there can't find a black node to borrow from this sub-tree
+            // so we search up, make the whole tree lack a black node
+            if(B(sibling) && B(parent)) {
+                // after coloring sibling red, every path from current root lacks a black node
+                sibling->black = false;
+                // now, fix up
+                fix(parent->parent, parent, parent->parent->left == parent);
+                return;
+            }
+        };
+        fix(p, s, is_n_left);
     }
 };
-
-#define DEBUG
 
 #ifdef DEBUG
 
@@ -408,6 +571,20 @@ int main() {
     vector<int> test_data = {0, 1, 2, 3, 4, 5, 6, 7};
     for(auto i : test_data) {
         rot_test_tree.insert(i);
+    }
+    for(auto i : test_data) {
+        rot_test_tree.remove(rot_test_tree.get(i));
+        cout << "after removing " << i << endl;
+        cout << "mid order: ";
+        function<void(Node*)> mid_order = [&](Node *n) {
+            IN(n) return;
+            mid_order(n->left);
+            cout << n->val << " ";
+            mid_order(n->right);
+        };
+        mid_order(rot_test_tree.root);
+        cout << endl;
+        cout << endl;
     }
     return 0;
 }

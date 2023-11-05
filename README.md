@@ -26,29 +26,31 @@ It is written
 
     - [Tree Like Array](./tree_array/tree_array.cxx)
 
-3. Other Graph-Related
+3. Shortest path
 
-    - [Critical Path](./graph/critical_path.cxx)
-    - [Disjoint Set](./graph/disjoint_set.cxx)
-    - Shortest path
+    - [Dijkstra](./graph/shortest_path/dijkstra.cxx)
+    - [Bellman-Ford](./graph/shortest_path/bellman_ford.cxx)
+    - [Floyd](./graph/shortest_path/floyd.cxx)
 
-        - [Dijkstra](./graph/shortest_path/dijkstra.cxx)
-        - [Bellman-Ford](./graph/shortest_path/bellman_ford.cxx)
-        - [Floyd](./graph/shortest_path/floyd.cxx)
-    - Minimal Spanning Tree
+4. Minimal Spanning Tree
 
-        - [Prim](./graph/minimal_spanning_tree/prim.cxx)
-        - [Kruskal](./graph/minimal_spanning_tree/kruskal.cxx)
+    - [Prim](./graph/minimal_spanning_tree/prim.cxx)
+    - [Kruskal](./graph/minimal_spanning_tree/kruskal.cxx)
 
-4. Other Tree-Related
+5. Other Tree-Related
 
-5. Bisect
+6. Bisect
 
-    - [Binary Search Tree](./bisect/binary_search_tree.cxx)
-    - [Red-Black Tree](./tree/rb_tree.cxx)
     - [Bisect](./bisect/bisect.cxx)
+    - [Binary Search Tree](./bisect/binary_search_tree.cxx)
+    - [Red-Black Tree](./bisect/rb_tree.cxx)
 
-6. Sort
+7. Sort
 
     - [Quick Sort](./sort/quick_sort.cxx)
     - [Merge Sort](./sort/merge_sort.cxx)
+
+8. Other Graph-Related
+
+    - [Critical Path](./graph/critical_path.cxx)
+    - [Disjoint Set](./graph/disjoint_set.cxx)
