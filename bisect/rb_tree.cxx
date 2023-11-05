@@ -170,6 +170,11 @@ struct RBTree {
         }
     }
 
+    void rotate(Node *n, bool left) {
+        if(left) left_rotate(n);
+        else right_rotate(n);
+    }
+
     void insert(int val) {
         ++size;
         // first, insert the node the same way as binary search tree
@@ -188,162 +193,110 @@ struct RBTree {
         cur->parent = prev;
         if(val < prev->val) prev->left = cur;
         else prev->right = cur;
-        // now, we need to fix the red-black tree property
-        // because fixing the red-black tree property would make sure that
-        // for every path from a node to a leaf has the same number of black nodes
-        // so the tree is balanced
-        // we do so by rotating and recoloring
-        // by default, the new node is red
-        // because this doesn't hurts equal-black-nodes property
-        // or else, we have more cases to cover
-        // and now, we need to fix the tree
-        // there are following cases that we need to fix
-        // we move the fixing process to a function for convenience
-        // because we'll need recursive calls
-        // fix function fixes the tree of following shape
+        // now, we need to fix the tree
+        // the tree looks like this now
         //          g
         //         / \
         //        p   u
-        //      / \
-        //     n   *
-        // in which, p and n may both be red
-        function<void(Node*)> fix = [&](Node* n) {
-            // n may be nullptr
+        //       / \
+        //      n   *
+        // the only problem here is that, n and p could be both red
+        // we need to fix this
+        function<void(Node*, bool)> fix = [&](Node* n, bool p_is_left) {
+            // n can be null
             IN(n) return;
-            // if the node is root
-            // we just need to color it black, it's done
-            IN(n->parent) {
-                n->black = true;
-                return;
-            }
-            // code below would use grandparent
-            // so we need to handle the case where grandparent == nullptr manually
-            // but since the root is black
-            // we can assert that the new node must be red, which is out default setting
-            // so no need to handle this case
-            IN(n->parent->parent) return;
-
-            // below
-            // g stands for grandparent
-            // u stands for uncle
-            // p stands for parent
-            // n stands for current node
-
+            // first we find p, u, g
+            // however, g maybe nullptr
+            // in this case, since p is root, root is black, we just leave the tree as it is
             Node *p = n->parent;
             Node *g = p->parent;
-            Node *u = g->left == p ? g->right : g->left;
-
-            // there is an extra point to notice
-            // when we re-balance a tree after inserting a new node
-            // the count of the black nodes in the path from the root to the leaf
-            // must stay the same or change by 1
-
-            // now, consider a sub-tree whose root is g
-            // first, we balance this tree as if it is the whole
-            // after doing so, the blacks on path either stay or plus one
-            // if it stays, well done, the tree is now balanced
-            // because the count of the other paths doesn't change, and this one doesn't change as well
-            // however, if it changes by one
-            // we need to force it to balance
-            // that is, we color the root red
-            // now, if we take the g as the new n
-            // this becomes a same problem, that is
-            // there is a red-black tree
-            // but there appears two adjacent red nodes, or different black nodes count,
-            // balance the tree
-            // so recursion would solve it.
-
-            // the following cases are tricky
-            // but bear the above in mind.
-
-            // below we assume n is red
-
-            // 1. p is red, u is red
-            // for example
+            IN(g) return;
+            Node *u = p_is_left ? g->right : g->left;
+            bool n_is_left = p->left == n;
+            // 1. p is black
+            // we don't need to do anything, it's already balanced
+            // 2. p is red, n-p is of same direction as p-g
+            // the reason why n position matters is that
+            // we need to rotate g, and after rotation
+            // the new position of n depends on it,
+            // now n and p are now both red
+            // the way to fix depends on u, because p is red, g must be black
+            // when p is the left child of g
+            // the tree is like this
             //          g
             //         / \
             //        p   u
-            //      / \
-            //     n   *
-            // in such case, inserting n does plus one on the count
-            // so we color g red, thus p, u black
-            // notice that if n is red, then this sub-tree is balanced
-            // wether n is the left child or the right child of p doesn't matter
-            // thus
-            if(!B(p) && !B(u)) {
-                INN(p) p->black = true;
-                INN(u) u->black = true;
-                INN(g) g->black = false;
-                // now, we need to fix the tree
-                // because g is red, and p is black
-                // so we need to fix the tree as if p is the new node
-                // and we do so by recursion
-                fix(g);
-                return;
-            }
-            // 2. p is red, u is black, n is left child
-            // for example
-            //          g
-            //         / \
-            //        p   u
-            //      / \
-            //     n   *
-            // notice after balancing, g must be red, so p must be black
-            // here to count the number of black nodes
-            // we adds a number to the graph
-            // x acts as a variable, originally, from g to any node, there was x black nodes(excluding g)
-            //          g
-            //         / \
-            //        p   u
-            //      / \
-            //     n   *
-            //    x+1 x+1 x
-            // so, to make the sub-tree balanced, we rotate right the g
-            // it comes
+            //       / \
+            //      n   *
+            // to do the following operations, we color p black, g red, n stays red
+            // because, in this way, all paths through p has x black nodes
+            // and g-u has x-1 black nodes, which is simpler to deal with
+            // however, if u is red, we can't do this
+            // 2.1. p is red, n-p is of same direction as p-g, u is black
+            // then we need to get rid of the extra black node in n
+            // we can do this by rotating g right
+            // after rotation, the tree becomes
             //          p
             //         / \
             //        n   g
             //           / \
             //          *   u
-            // count doesn't change and the root is black, done!
-            if(!B(p) && B(u) && p->left == n) {
-                right_rotate(g);
+            // similarly, if p is the right child of g
+            // we rotate g left, color p black, g red, n stays red
+            if(!B(p) && B(u) && n_is_left == p_is_left) {
                 INN(p) p->black = true;
                 INN(g) g->black = false;
+                rotate(g, !p_is_left);
                 return;
             }
-            // 3. p is red, u is black, n is right child
-            // for example
-            //          g
-            //         / \
-            //        p   u
-            //      / \
-            //     *   n
-            // now, g must become red, so p must be black
-            //          g
-            //         / \
-            //        p   u
-            //      / \
-            //     *   n
-            //    x-1 x-1 x
-            // now, rotate left the g
-            //          u
-            //         / \
-            //        g   *
-            //      / \
-            //     p   *
-            //    / \
-            //   *   n
-            // the additional two stars are the original u's children
-            // now, this is a balanced tree, because the count doesn't change, and the root is black
-            if(!B(p) && B(u) && p->right == n) {
-                left_rotate(g);
+            // 2.2. p is red, n-p is of same direction as p-g, u is red
+            // in other cases, we want the root to be black
+            // so that it won't violate the rule after taking the whole tree into consideration
+            // but now, we need to move up, since the sub-tree can't balance itself
+            // now we color g red, p and u black
+            // this is a balanced tree, but the root is red
+            // we just need to fix upwards, taking g as the new n
+            if(!B(p) && !B(u)) {
                 INN(g) g->black = false;
+                INN(p) p->black = true;
                 INN(u) u->black = true;
+                // g maybe root, so we need to do null check
+                // don't worry- if g is root, coloring g black won't violate the rule
+                // it's just there may be null pointer exceptions
+                IN(g->parent) {
+                    g->black = true;
+                    return;
+                }
+                fix(g, g->parent->left == g);
+                return;
+            }
+
+            // 3. p is red, n-p is of opposite direction as p-g
+            // the tree is like this, if p is the left child of g
+            //          g
+            //         / \
+            //        p   u
+            //       / \
+            //      *   n
+            // now previous operations won't work, because n won't be in the right position
+            // we want n-p to be of same direction as p-g
+            // so we rotate p left
+            //          g
+            //         / \
+            //        n   u
+            //       /
+            //      p
+            //     /
+            //    *
+            // now, the tree is still balanced, but n-p are of same color
+            // now, treat p as n, and n as p, we can apply fix function again
+            if(!B(p) && n_is_left != p_is_left) {
+                rotate(p, p_is_left);
+                fix(p, !n_is_left);
                 return;
             }
         };
-        fix(cur);
+        fix(cur, cur->parent->left == cur);
     }
 
     Node *get(int val) {
@@ -500,10 +453,6 @@ struct RBTree {
                 if(left) return n->left;
                 else return n->right;
             };
-            function<void(Node*,bool)> rotate = [&](Node* n, bool left) {
-                if(left) left_rotate(n);
-                else right_rotate(n);
-            };
             if(B(sibling) && !B(get_child(sibling, !lack_in_left))) {
                 // first color, then rotate
                 sibling->black = parent->black;
@@ -568,7 +517,7 @@ using namespace std;
 
 int main() {
     RBTree rot_test_tree;
-    vector<int> test_data = {0, 1, 2, 3, 4, 5, 6, 7};
+    vector<int> test_data = {0, 1, 2, 3, 4, 5, 6};
     for(auto i : test_data) {
         rot_test_tree.insert(i);
     }
