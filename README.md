@@ -39,8 +39,8 @@ It is written
 
 5. Other Tree-Related
 
-    -[Trie](./tree/trie.cxx)
-    -[Huffman](./tree/huffman.cxx)
+    - [Trie](./tree/trie.cxx)
+    - [Huffman](./tree/huffman.cxx)
 
 6. Bisect
 
