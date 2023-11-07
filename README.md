@@ -22,9 +22,9 @@ It is written
 
     - [ZKW Segment Tree](./segment_tree/zkw_segment_tree.cxx)
 
-2. Tree Like Array
+2. Binary Indexed Tree
 
-    - [Tree Like Array](./tree_array/tree_array.cxx)
+    - [Binary Indexed Tree](./binary_indexed_tree/binary_indexed_tree.cxx)
 
 3. Shortest path
 
@@ -39,6 +39,9 @@ It is written
 
 5. Other Tree-Related
 
+    -[Trie](./tree/trie.cxx)
+    -[Huffman](./tree/huffman.cxx)
+
 6. Bisect
 
     - [Bisect](./bisect/bisect.cxx)
@@ -49,6 +52,7 @@ It is written
 
     - [Quick Sort](./sort/quick_sort.cxx)
     - [Merge Sort](./sort/merge_sort.cxx)
+    - [Buckle Sort](./sort/buckle_sort.cxx)
 
 8. Other Graph-Related
 

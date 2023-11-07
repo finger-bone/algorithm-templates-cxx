@@ -449,7 +449,7 @@ struct RBTree {
             // this would solve both cases
             // if s was the left child of p, we rotate right p
             // so we define some functions to simplify the code
-            function<Node*(Node*,bool)> get_child = [&](Node *n, bool left) {
+            function<Node*(Node*,bool)> get_child = [](Node *n, bool left) {
                 if(left) return n->left;
                 else return n->right;
             };
