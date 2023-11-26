@@ -40,7 +40,7 @@ void quick_sort(vector<int>& nums, int l, int r) {
 int main() {
     vector<int> nums = {3, 2, 4, 1, 6, 2};
     quick_sort(nums, 0, nums.size() - 1);
-    for(auto& num : nums) {
+    for(auto num : nums) {
         cout << num << " ";
     }
     cout << endl;

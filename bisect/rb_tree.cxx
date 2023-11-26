@@ -112,16 +112,10 @@ struct RBTree {
         INN(e) e->parent = n;
         INN(f) f->parent = b;
         // there maybe cases that such rotation changes the root
-        IN(p) {
-            root = b;
-        }
+        IN(p) root = b;
         else {
-            if(p->left == n) {
-                p->left = b;
-            }
-            else {
-                p->right = b;
-            }
+            if(p->left == n) p->left = b;
+            else p->right = b;
         }
     }
     void right_rotate(Node *n) {
@@ -157,16 +151,10 @@ struct RBTree {
         INN(d) d->parent = n;
         INN(c) c->parent = b;
         // there maybe cases that such rotation changes the root
-        IN(p) {
-            root = b;
-        }
+        IN(p) root = b;
         else {
-            if(p->left == n) {
-                p->left = b;
-            }
-            else {
-                p->right = b;
-            }
+            if(p->left == n) p->left = b;
+            else p->right = b;
         }
     }
 
@@ -229,7 +217,7 @@ struct RBTree {
             //       / \
             //      n   *
             // to do the following operations, we color p black, g red, n stays red
-            // because, in this way, all paths through p has x black nodes
+            // because, inx this way, all paths through p has x black nodes
             // and g-u has x-1 black nodes, which is simpler to deal with
             // however, if u is red, we can't do this
             // 2.1. p is red, n-p is of same direction as p-g, u is black

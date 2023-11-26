@@ -13,9 +13,9 @@ tuple<int,int> get_min_max_ind(vector<int>& nums, int l, int r) {
     return make_tuple(min_ind, max_ind);
 }
 
-// for smaller data sets, insertion sort is faster than quicksort
-// here we use two-way insertion sort
-void insertion_sort(vector<int>& nums) {
+// for smaller data sets, insertion sort / selection sort is faster than quicksort
+// here we use two-way selection sort
+void selection_sort(vector<int>& nums) {
     int n = nums.size();
     int l = 0;
     int r = n - 1;
@@ -40,7 +40,7 @@ void buckle_sort(vector<int>& nums) {
         int bucket_ind = (nums[i] - nums[min_ind]) / bucket_size;
         buckets[bucket_ind].push_back(nums[i]);
     }
-    for(int i = 0; i < bucket_num; ++i) insertion_sort(buckets[i]);
+    for(int i = 0; i < bucket_num; ++i) selection_sort(buckets[i]);
     int ind = 0;
     for(int i = 0; i < bucket_num; ++i) {
         for(int j = 0; j < buckets[i].size(); ++j) {

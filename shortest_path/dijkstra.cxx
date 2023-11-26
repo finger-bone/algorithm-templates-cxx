@@ -43,7 +43,6 @@ vector<int> dijkstra(vector<vector<Node>> g, int source) {
             // relax
             if(dist[v] > dist[u] + w) {
                 dist[v] = dist[u] + w;
-                
                 // if dist[v] is not updated, it must have been added to pq before
                 pq.push(Node(v, dist[v]));
             }

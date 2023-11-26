@@ -39,6 +39,7 @@ It is written
 
 5. Other Tree-Related
 
+    - [Heap](./tree/heap.cxx)
     - [Trie](./tree/trie.cxx)
     - [Huffman](./tree/huffman.cxx)
 
@@ -58,3 +59,7 @@ It is written
 
     - [Critical Path](./graph/critical_path.cxx)
     - [Disjoint Set](./graph/disjoint_set.cxx)
+
+9. Uncategorized
+
+    - [KMP](./misc/kmp.cxx)
