@@ -7,6 +7,20 @@ struct Heap {
     vector<int> data;
     function<bool(int, int)> cmp;
     Heap(function<bool(int, int)> cmp) : cmp(cmp) {}
+    void set_data(vector<int> raw) {
+        this->data = raw;
+        // now, heapify the data
+        function<void(int)> make_heap = [&](int i) {
+            int next = i;
+            // choose the child that is smaller than the parent
+            if (2 * i + 1 < data.size() && cmp(data[2 * i + 1], data[next])) next = 2 * i + 1;
+            if (2 * i + 2 < data.size() && cmp(data[2 * i + 2], data[next])) next = 2 * i + 2;
+            if (i == next) return;
+            swap(data[i], data[next]);
+            make_heap(next);
+        };
+        for(int i = data.size() - 1; i >= 0; --i) make_heap(i);
+    }
     void push(int val) {
         data.push_back(val);
         // now, the new val is at the bottom of the heap

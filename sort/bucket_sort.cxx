@@ -29,7 +29,7 @@ void selection_sort(vector<int>& nums) {
     }
 }
 
-void buckle_sort(vector<int>& nums) {
+void bucket_sort(vector<int>& nums) {
     int n = nums.size();
     auto [min_ind, max_ind] = get_min_max_ind(nums, 0, n - 1);
     // we assume the data are evenly distributed
@@ -56,7 +56,7 @@ void buckle_sort(vector<int>& nums) {
 
 int main() {
     vector<int> vec = {0, 1, 2, 8, 4, 3, 7, 6, 5, 9};
-    buckle_sort(vec);
+    bucket_sort(vec);
     for(auto& x : vec) cout << x << " ";
     cout << endl;
     return 0;
