@@ -27,6 +27,7 @@ It is written
 1. Segment Tree
 
    - [ZKW Segment Tree](./segment_tree/zkw_segment_tree.cxx)
+   - [Segment Tree](./segment_tree/segment_tree.cxx)
 
 2. Binary Indexed Tree
 
