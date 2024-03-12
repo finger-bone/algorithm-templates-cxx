@@ -35,9 +35,9 @@ It is written
 
 3. Shortest path
 
-   - [Dijkstra](./graph/shortest_path/dijkstra.cxx)
-   - [Bellman-Ford](./graph/shortest_path/bellman_ford.cxx)
-   - [Floyd](./graph/shortest_path/floyd.cxx)
+   - [Dijkstra](./shortest_path/dijkstra.cxx)
+   - [Bellman-Ford](./shortest_path/bellman_ford.cxx)
+   - [Floyd](./shortest_path/floyd.cxx)
 
 4. Minimal Spanning Tree
 
