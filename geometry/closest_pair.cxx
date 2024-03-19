@@ -60,8 +60,6 @@ vector<Point> closest_pair_of_points(vector<Point> points) {
     }
 }
 
-#define DEBUG
-
 #ifdef DEBUG
 
 #include <iostream>
