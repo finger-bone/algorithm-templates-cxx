@@ -1,8 +1,15 @@
+---
+runme:
+  id: 01HSA4D7PV9VR4DEXBXGVP748S
+  version: v3
+---
+
 # Algorithm templates
+
 
 ## Misc
 
-It is written
+It was written
 
 1. in c++23, but uses only up to c++17 features .
 2. the coding styles would be as follows
@@ -56,6 +63,8 @@ It is written
 
 9. Geometry
    - [Closest Pair](./geometry/closest_pair.cxx)
+   - [Convex Hull](./geometry/convex_hull.cxx)
 
 10. Uncategorized
    - [KMP](./misc/kmp.cxx)
+   - [K Largest By Divide and Decrease](./misc/k_largest.cxx)
