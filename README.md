@@ -38,6 +38,7 @@ It is written
    - [Dijkstra](./shortest_path/dijkstra.cxx)
    - [Bellman-Ford](./shortest_path/bellman_ford.cxx)
    - [Floyd](./shortest_path/floyd.cxx)
+   - [A Star](./shortest_path/a_star.cxx)
 
 4. Minimal Spanning Tree
 
@@ -67,6 +68,10 @@ It is written
    - [Critical Path](./graph/critical_path.cxx)
    - [Disjoint Set](./graph/disjoint_set.cxx)
 
-9. Uncategorized
+9. Geometry
+
+   - [Closest Pair](./geometry/closest_pair.cxx)
+
+10. Uncategorized
 
    - [KMP](./misc/kmp.cxx)

@@ -19,17 +19,17 @@ struct SegmentTree
     int n;
     SegmentTree(vector<int> raw) {
         n = raw.size();
-        function<Node*(int, int)> build = [&](int l, int r) -> Node* {
+        function<Node*(int, int)> f = [&](int l, int r) -> Node* {
             if(l == r) {
                 return new Node(l < n ? raw[l] : 0, l, r);
             }
             int mid = (l + r) / 2;
-            Node* left = build(l, mid);
-            Node* right = build(mid + 1, r);
+            Node* left = f(l, mid);
+            Node* right = f(mid + 1, r);
             Node* ret = new Node(left->val + right->val, l, r, left, right);
             return ret;
         };
-        root = build(0, n - 1);
+        root = f(0, n - 1);
     }
     int query(int l, int r) {
         function<int(Node*, int, int)> f = [&](Node* node, int l, int r) -> int {
