@@ -89,7 +89,6 @@ vector<Node> get_path(
     return path;
 }
 
-
 #ifdef DEBUG
 
 #include <iostream>

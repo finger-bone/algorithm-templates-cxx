@@ -28,7 +28,7 @@ struct DS {
         return cur;
     }
 
-    void unify(int x, int y) {
+    void join(int x, int y) {
         // we would like to make the tree more balanced
         // that is, we want fewer nodes at the deeper level
         if(rank[x] >= rank[y]) swap(x, y);
@@ -43,9 +43,9 @@ struct DS {
 
 int main() {
     DS ds(5);
-    ds.unify(0, 1);
-    ds.unify(1, 2);
-    ds.unify(3, 4);
+    ds.join(0, 1);
+    ds.join(1, 2);
+    ds.join(3, 4);
     for(int i = 0; i < 5; i++) {
         cout << ds.find(i) << endl;
     }

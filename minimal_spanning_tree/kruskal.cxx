@@ -15,7 +15,7 @@ struct DS {
         }
         return cur;
     }
-    void unify(int x, int y) {
+    void join(int x, int y) {
         if(rank[x] >= rank[y]) swap(x, y);
         rank[y] += rank[x]; fa[find(x)] = find(y);
     }
@@ -43,7 +43,7 @@ vector<Edge> kruskal(vector<Edge> g, int n) {
         // since the edges are sorted by weight and it must be the smallest edge that complete this work
         if(ds.find(e.from) != ds.find(e.to)) {
             mst.push_back(e);
-            ds.unify(e.from, e.to);
+            ds.join(e.from, e.to);
         }
     }
     return mst;

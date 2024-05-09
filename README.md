@@ -60,6 +60,7 @@ It was written
 + Other Graph-Related
    - [Critical Path](./graph/critical_path.cxx)
    - [Disjoint Set](./graph/disjoint_set.cxx)
+   - [Max Flow](./graph/max_flow.cxx)
 
 + Geometry
    - [Closest Pair](./geometry/closest_pair.cxx)
