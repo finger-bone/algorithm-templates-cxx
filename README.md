@@ -1,11 +1,4 @@
----
-runme:
-  id: 01HSA4D7PV9VR4DEXBXGVP748S
-  version: v3
----
-
 # Algorithm templates
-
 
 ## Misc
 
